@@ -68,12 +68,48 @@ def getSearchResults(url, page=2):
     getSearchResults(url, page+1)
 
 
+def getCompanyData(companyUrl):
+    time.sleep(2)
+    driver.get(companyUrl+"/about")
+    time.sleep(4)
+    source = BeautifulSoup(driver.page_source)
+    links = source.find_all('a')
+    website = source.find_all(
+        'a', class_="ember-view org-top-card-primary-actions__action")[0].get("href")
+    print("website:", website)
+    fields = source.find_all(
+        'dd', class_="text-body-small")
+
+    no_of_employees = None
+    for f in fields:
+        if "employees" in f.text:
+            no_of_employees = f.text.strip()
+    for link in links:
+        if link.get("href").startswith("tel"):
+            print("Phone:", link.get("href").split(":")[1])
+        elif link.get("href").startswith("https://www.bing.com/maps?where="):
+            addr = link.get("href").split(
+                "where=")[1].replace('%20', " ").replace('%2C', ",")
+            print("Address:", addr)
+            if len(addr.split(",")) == 1:
+                print("Country:", addr)
+            if len(addr.split(",")) == 2:
+                print("Country:", addr.split(",")[1])
+                print("State:", addr.split(",")[0])
+            if len(addr.split(",")) >= 3:
+                print("Country:", addr.split(",")[-1])
+                print("State:", addr.split(",")[-2])
+                print("City:", addr.split(",")[-3])
+
+
 if __name__ == "__main__":
     login()
     # url = f'https://www.linkedin.com/search/results/people/?geoUrn=%5B%22103644278%22%2C%22101165590%22%2C%22101174742%22%5D&keywords={var_keywords}&origin=FACETED_SEARCH&sid=aRj&title={var_title}'
     # getSearchResults(url)
 
-    get_company_url('https://www.linkedin.com/in/kartikreddy/')
+    # get_company_url('https://www.linkedin.com/in/kartikreddy/')
+    getCompanyData(
+        'https://www.linkedin.com/company/asociacion-mexicana-de-hidr%C3%B3geno')
 
     time.sleep(4)
     driver.quit()
