@@ -11,7 +11,7 @@ var_title = "CEO"
 var_locations = []
 
 
-driver = webdriver.Chrome()
+driver = webdriver.Chrome("chromedriver.exe")
 file1 = open("profileurls.txt", "w")
 file1.write("List of profile urls: \n\n\n")
 file1.close()
@@ -29,6 +29,15 @@ def login():
         by=By.XPATH, value="//*[@id=\"organic-div\"]/form/div[3]/button")
     loginbutton.click()
     time.sleep(3)
+
+
+def get_company_url(profileUrl):
+    time.sleep(2)
+    driver.get(profileUrl)
+    time.sleep(4)
+    source = BeautifulSoup(driver.page_source)
+    print(source.find("a", attrs={
+          "data-field": "experience_company_logo"}).get("href"))
 
 
 def getSearchResults(url, page=2):
@@ -61,7 +70,10 @@ def getSearchResults(url, page=2):
 
 if __name__ == "__main__":
     login()
-    url = f'https://www.linkedin.com/search/results/people/?geoUrn=%5B%22103644278%22%2C%22101165590%22%2C%22101174742%22%5D&keywords={var_keywords}&origin=FACETED_SEARCH&sid=aRj&title={var_title}'
-    getSearchResults(url)
+    # url = f'https://www.linkedin.com/search/results/people/?geoUrn=%5B%22103644278%22%2C%22101165590%22%2C%22101174742%22%5D&keywords={var_keywords}&origin=FACETED_SEARCH&sid=aRj&title={var_title}'
+    # getSearchResults(url)
+
+    get_company_url('https://www.linkedin.com/in/kartikreddy/')
+
     time.sleep(4)
     driver.quit()
