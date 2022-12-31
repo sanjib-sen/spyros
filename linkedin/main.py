@@ -5,7 +5,7 @@ import time
 import json
 from pprint import pprint
 
-email = 'org.sanjib+239@gmail.com'
+email = 'nevertrytoknow@outlook.com'
 password = 'mahmudabdullah'
 var_keywords = "hydrogen"
 var_title = "CEO"
@@ -44,7 +44,7 @@ def getFromProfile(profileUrl):
     company = source.find("a", attrs={
         "data-field": "experience_company_logo"})
     companyUrl = company.get("href")
-    companyName = company.parent.parent.find("span", attrs={
+    companyName = company.parent.parent.find('span', class_="t-14 t-normal").find("span", attrs={
         "aria-hidden": "true"}).text.strip()
     location = source.find_all(
         "span", class_="text-body-small inline t-black--light break-words")[0].text.strip()
